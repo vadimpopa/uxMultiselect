@@ -1,0 +1,99 @@
+@prefix: ux;
+
+.@{prefix}-multiselect-loader {
+  float: right;
+  .loader-16x16;
+}
+
+.@{prefix}-multiselect-ul {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+}
+
+.@{prefix}-multiselect-focus {
+  border-color: #33aaed !important;
+  -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.125);
+  -moz-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.125);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.125);
+}
+
+.@{prefix}-multiselect-inp {
+  padding: 1px 0 1px 0;
+  border: 1px solid #d9d9d9;
+  border-top: 1px solid #c0c0c0;
+  background-color: white;
+
+  .@{prefix}-multiselect-li {
+    display: inline-block;
+    margin: 2px;
+    padding: 0;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.1);
+  }
+
+  .@{prefix}-multiselect-item {
+    border: 1px solid #d0d0d0;
+    background: #efefef;
+    -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  }
+
+  .@{prefix}-multiselect-chosen {
+    padding: 2px 0 2px 4px;
+    vertical-align: middle;
+    cursor: pointer;
+    color: #303030;
+    font-family: Helvetica, arial, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .@{prefix}-multiselect-chosen-focused {
+    background-color: #295F7A;
+  }
+
+  .@{prefix}-multiselect-remove {
+    padding: 0 4px 0 0;
+    color: #303030;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
+
+  .@{prefix}-multiselect-type {
+    margin-left: 2px;
+    outline: 0;
+    border: 0;
+  }
+}
+
+.@{prefix}-multiselect-selector {
+  position: absolute;
+  border: 1px solid lightgray;
+  border-top: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,.1);
+  background: white;
+  z-index: 1000;
+
+  .@{prefix}-multiselect-selector-more {
+    position: absolute;
+    right: 5px;
+    bottom: 0;
+    border-radius: 5px;
+    color: lightgray;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .@{prefix}-multiselect-choice-selected {
+    background-image: linear-gradient(to bottom, #0088cc, #0077b3);
+    color: white;
+    cursor: pointer;
+    transition: 100ms cubic-bezier(0.250, 0.250, 0.750, 0.750) all;
+  }
+
+  .@{prefix}-multiselect-selector-li {
+    padding-left: 10px;
+  }
+}
