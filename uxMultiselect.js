@@ -4,11 +4,11 @@ app.run(['$templateCache',
         $templateCache.put('ux-multiselect.html',
         	['<div class="ux-multiselect-inp" data-ng-class="{ \'ux-multiselect-focus\': focusInput}"',
 				 '<ul class="ux-multiselect-ul">',
-					'<li class="ux-multiselect-li ux-multiselect-item" data-ng-repeat="item in output track by $index">',
-						'<span class="ux-multiselect-chosen" data-ng-class="focusChoice[$index] ? \'ux-multiselect-chosen-focused\' : \'\'"',
-							   'data-ng-click="removeItem($index)">',
-							'{{item[displayfield]}} <span class="ux-multiselect-remove">X</span>',
-						'</span>',
+					'<li class="ux-multiselect-li ux-multiselect-item" data-ng-repeat="item in output track by $index"',
+						'data-ng-class="focusChoice[$index] ? \'ux-multiselect-chosen-focused\' : \'\'"',
+						'data-ng-click="removeItem($index)">',
+						'{{item[displayfield]}}',
+						'<span class="ux-multiselect-remove">x</span>',
 					'</li>',
 
 					'<li class="ux-multiselect-li">',
@@ -24,14 +24,11 @@ app.run(['$templateCache',
 			'</div>',
 
 			'<div class="ux-multiselect-selector" data-ng-show="isOpen()"',
-				'<ul class="ux-multiselect-ul">',
+				'<ul class="ux-multiselect-ul" data-ux-delegate="click | li | addItem(item)">',
 					'<li class="ux-multiselect-selector-li" data-ng-repeat="item in matches | limitTo: limitFilter"',
 					    'data-ng-class="$parent.selectorPosition === $index ? \'ux-multiselect-choice-selected\' : \'\'"',
-						'<div class="ux-multiselect-choice"',
-						     'data-ng-click="addItem(item, output.length, $event)"',
-						     'data-ng-mouseenter="$parent.selectorPosition = $index">',
-							'<span data-ng-bind-html-unsafe="\'{{item[displayfield]}}\' | uxMultiselectHighlight: query"></span>',
-						'</div>',
+						'data-ng-mouseenter="$parent.selectorPosition = $index">',
+						'<span data-ng-bind-html-unsafe="\'{{item[displayfield]}}\' | uxMultiselectHighlight: query"></span>',
 					'</li>',
 				'</ul>',
 				'<div class="ux-multiselect-selector-more" data-ng-show="matches.length >= limitFilter">•••</div>',
@@ -225,3 +222,38 @@ app.directive('uxMultiselect', ['$templateCache','$document', '$q', '$timeout', 
 		} else return text;
 	};
 }]);
+
+
+app.directive("uxDelegate", function( $parse ) {
+
+    function link( $scope, element, attributes ) {
+        var config = attributes.uxDelegate.replace(/\s+/g, '').split("|"),
+        	delegate = config[0],
+        	selector = config[1],
+        	expression = config[2],
+        	expressionHandler;
+
+        // Parse the expression into an invokable function. This way, we don't have to re-parse
+        // it every time the event handler is triggered.
+        expressionHandler = $parse(expression);
+
+		function onDelegate(event) {
+            event.preventDefault();
+
+            // Find the scope most local to the target of the click event.
+            var localScope = $(event.target).scope();
+
+            // Invoke the expression in the local scope
+            // context to make sure we adhere to the
+            // proper scope chain prototypal inheritance.
+            localScope.$apply(expressionHandler.bind(localScope));
+        };
+
+        element.on(delegate, selector, onDelegate);
+    };
+
+    return({
+        link: link,
+        restrict: "A"
+    });
+});
