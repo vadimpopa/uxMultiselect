@@ -19,6 +19,7 @@
 }
 
 .@{prefix}-multiselect-inp {
+  cursor: text;
   padding: 1px 0 1px 0;
   border: 1px solid #d9d9d9;
   border-top: 1px solid #c0c0c0;
@@ -26,6 +27,7 @@
 
   .@{prefix}-multiselect-li {
     display: inline-block;
+    list-style-type: none;
     margin: 2px;
     padding: 0;
     text-shadow: 0 1px 0 rgba(255,255,255,0.1);
@@ -37,28 +39,25 @@
     -webkit-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
     -moz-box-shadow: 0 1px 1px rgba(0,0,0,0.1);
     box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-  }
-
-  .@{prefix}-multiselect-chosen {
-    padding: 2px 0 2px 4px;
-    vertical-align: middle;
-    cursor: pointer;
-    color: #303030;
     font-family: Helvetica, arial, sans-serif;
     font-size: 14px;
     line-height: 20px;
     -webkit-font-smoothing: antialiased;
+    color: #303030;
+    cursor: pointer;
   }
 
   .@{prefix}-multiselect-chosen-focused {
     background-color: #295F7A;
+    color: white !important;
   }
 
   .@{prefix}-multiselect-remove {
-    padding: 0 4px 0 0;
+    padding: 0 4px;
     color: #303030;
     font-size: 0.8em;
     font-weight: bold;
+    float: right;
   }
 
   .@{prefix}-multiselect-type {
@@ -69,7 +68,7 @@
 }
 
 .@{prefix}-multiselect-selector {
-  position: absolute;
+  //position: absolute; //Uncomment if is not needed auto width based on search width
   border: 1px solid lightgray;
   border-top: 0;
   box-shadow: 0 1px 3px rgba(0,0,0,.1);
@@ -95,5 +94,6 @@
 
   .@{prefix}-multiselect-selector-li {
     padding-left: 10px;
+    list-style-type: none;
   }
 }

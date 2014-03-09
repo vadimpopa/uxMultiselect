@@ -20,4 +20,4 @@ Usage:
         data-placeholder='Select'
         data-limit-filter=8></div>
 ```
-More to come.
+Plunker: http://plnkr.co/hKmEm7lvkQU3TOynyi1r

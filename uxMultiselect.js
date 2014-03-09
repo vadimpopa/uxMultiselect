@@ -2,7 +2,7 @@ app.run(['$templateCache',
     function($templateCache) {
         // add template for search typeahead result
         $templateCache.put('ux-multiselect.html',
-        	['<div class="ux-multiselect-inp" data-ng-class="{ \'ux-multiselect-focus\': focusInput}"',
+        	['<div class="ux-multiselect-inp" data-ng-class="{ \'ux-multiselect-focus\': focusInput}" ng-click="setFocus($event)"',
 				 '<ul class="ux-multiselect-ul">',
 					'<li class="ux-multiselect-li ux-multiselect-item" data-ng-repeat="item in output track by $index"',
 						'data-ng-class="focusChoice[$index] ? \'ux-multiselect-chosen-focused\' : \'\'"',
@@ -19,16 +19,17 @@ app.run(['$templateCache',
 						       'data-ng-keydown="keyParser($event)"/>',
 					'</li>',
 					'<li class="ux-multiselect-li ux-multiselect-loader" data-ng-show="showLoader"></li>',
-					'<li class="clearfix"></li>',
+					'<li class="ux-multiselect-li clearfix"></li>',
 				'</ul>',
 			'</div>',
 
 			'<div class="ux-multiselect-selector" data-ng-show="isOpen()"',
-				'<ul class="ux-multiselect-ul" data-ux-delegate="click | li | addItem(item)">',
+				'<ul class="ux-multiselect-ul">',
 					'<li class="ux-multiselect-selector-li" data-ng-repeat="item in matches | limitTo: limitFilter"',
 					    'data-ng-class="$parent.selectorPosition === $index ? \'ux-multiselect-choice-selected\' : \'\'"',
+					    'data-ng-click="addItem(item)"',
 						'data-ng-mouseenter="$parent.selectorPosition = $index">',
-						'<span data-ng-bind-html-unsafe="\'{{item[displayfield]}}\' | uxMultiselectHighlight: query"></span>',
+						'<span data-ng-bind-html="\'{{item[displayfield]}}\' | uxMultiselectHighlight: query"></span>',
 					'</li>',
 				'</ul>',
 				'<div class="ux-multiselect-selector-more" data-ng-show="matches.length >= limitFilter">•••</div>',
@@ -53,7 +54,8 @@ app.directive('uxMultiselect', ['$templateCache','$document', '$q', '$timeout', 
 
 			var isOnDocClickAttached = false,
      			timeoutPromise,
-     			waitTime = 600;
+     			waitTime = 600,
+     			inpEl = element.find("input");
 
 			scope.placeholder = attrs.placeholder ? attrs.placeholder : '';
 
@@ -61,10 +63,16 @@ app.directive('uxMultiselect', ['$templateCache','$document', '$q', '$timeout', 
 			function filterNotSelected(item){
 				var i = 0,
 					output = scope.output,
-					ln = output.length;
+					ln = output.length,
+					displayField = scope.displayfield,
+					itemDisplayField = item[displayField];
+
+				if(!itemDisplayField.match(new RegExp(scope.query,"gi"))){
+					return false;
+				}
 
 				for(;i < ln; i++){
-					if(item.id === output[i].id) {
+					if(itemDisplayField === output[i][displayField]) {
 						return false;
 					}
 				}
@@ -97,6 +105,16 @@ app.directive('uxMultiselect', ['$templateCache','$document', '$q', '$timeout', 
 
 				} else {
 					scope.matches = source.filter(filterNotSelected);
+				}
+			};
+
+			scope.setFocus = function(event){
+				if(inpEl[0].className !== event.target.className) {
+					event.stopPropagation();
+
+					$timeout(function(){
+						inpEl[0].focus();
+					},20);
 				}
 			};
 
@@ -214,46 +232,17 @@ app.directive('uxMultiselect', ['$templateCache','$document', '$q', '$timeout', 
 			}.bind(scope);
 		}
 	}
-}]).filter('uxMultiselectHighlight', [function () {
+}]).filter('uxMultiselectHighlight',['$sce',function ($sce) {
 	return function (text, query) {
+		var html;
 		if (query.length > 0 || angular.isNumber(query)) {
-			text = text.toString(); query = query.toString();
-			return text.replace(new RegExp(query, 'gi'), '<strong>$&</strong>');
-		} else return text;
+			text = text.toString(); 
+			query = query.toString();
+			html = text.replace(new RegExp(query, 'gi'), '<strong>$&</strong>');
+		} else {
+			html = text;	
+		} 
+
+		return $sce.trustAsHtml(html);
 	};
 }]);
-
-
-app.directive("uxDelegate", function( $parse ) {
-
-    function link( $scope, element, attributes ) {
-        var config = attributes.uxDelegate.replace(/\s+/g, '').split("|"),
-        	delegate = config[0],
-        	selector = config[1],
-        	expression = config[2],
-        	expressionHandler;
-
-        // Parse the expression into an invokable function. This way, we don't have to re-parse
-        // it every time the event handler is triggered.
-        expressionHandler = $parse(expression);
-
-		function onDelegate(event) {
-            event.preventDefault();
-
-            // Find the scope most local to the target of the click event.
-            var localScope = $(event.target).scope();
-
-            // Invoke the expression in the local scope
-            // context to make sure we adhere to the
-            // proper scope chain prototypal inheritance.
-            localScope.$apply(expressionHandler.bind(localScope));
-        };
-
-        element.on(delegate, selector, onDelegate);
-    };
-
-    return({
-        link: link,
-        restrict: "A"
-    });
-});
