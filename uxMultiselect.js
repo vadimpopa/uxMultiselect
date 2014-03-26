@@ -2,7 +2,7 @@ app.run(['$templateCache',
     function($templateCache) {
         // add template for search typeahead result
         $templateCache.put('ux-multiselect.html',
-        	['<div class="ux-multiselect-inp" data-ng-class="{ \'ux-multiselect-focus\': focusInput}" ng-click="setFocus($event)"',
+        	['<div class="ux-multiselect-inp" data-ng-class="{ \'ux-multiselect-focus\': focusInput}" ng-click="setFocus($event)">',
 				 '<ul class="ux-multiselect-ul">',
 					'<li class="ux-multiselect-li ux-multiselect-item" data-ng-repeat="item in output track by $index"',
 						'data-ng-class="focusChoice[$index] ? \'ux-multiselect-chosen-focused\' : \'\'"',
@@ -23,7 +23,7 @@ app.run(['$templateCache',
 				'</ul>',
 			'</div>',
 
-			'<div class="ux-multiselect-selector" data-ng-show="isOpen()"',
+			'<div class="ux-multiselect-selector" data-ng-show="isOpen()">',
 				'<ul class="ux-multiselect-ul">',
 					'<li class="ux-multiselect-selector-li" data-ng-repeat="item in matches | limitTo: limitFilter"',
 					    'data-ng-class="$parent.selectorPosition === $index ? \'ux-multiselect-choice-selected\' : \'\'"',
