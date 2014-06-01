@@ -295,7 +295,6 @@ app.directive('uxMultiselect', ['$templateCache', '$document', '$q', '$timeout',
                 // proper scope chain prototypal inheritance.
                 localScope.$apply(expressionHandler.bind(localScope));
             };
-
             element.on(delegate, selector, onDelegate);
         };
 
