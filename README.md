@@ -23,3 +23,5 @@ Usage:
 Plunker: http://plnkr.co/hKmEm7lvkQU3TOynyi1r
 
 By using data-typeahead-template-url="item.html" attribute is possible to give a template for the dropdown's items
+
+![Multiselect field](screenshot.png)
